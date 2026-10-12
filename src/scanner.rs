@@ -52,26 +52,36 @@ pub enum TokenType {
     Eof,
 }
 
-enum Object {
+#[derive(Debug, Clone)]
+pub enum Object {
     String(String),
     Number(f64),
 }
 
+impl fmt::Display for Object {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Object::String(s) => write!(f, "{s:?}"),
+            Object::Number(n) => write!(f, "{n}"),
+        }
+    }
+}
 impl fmt::Display for TokenType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{:?}", self)
     }
 }
 
+#[derive(Debug, Clone)]
 pub struct Token {
     typ: TokenType,
-    lexeme: String,
+    pub lexeme: String,
     line: usize,
     object: Option<Object>,
 }
 
 impl Token {
-    pub fn new(typ: TokenType, lexeme: String, line: usize, object: Option<Object>) -> Self {
+    pub fn new(typ: TokenType, lexeme: String, line: usize, _object: Option<Object>) -> Self {
         Token {
             typ,
             lexeme,
@@ -318,11 +328,11 @@ impl Scanner {
 }
 
 fn is_digit(c: char) -> bool {
-    ('0'..='9').contains(&c)
+    c.is_ascii_digit()
 }
 
 fn is_alpha(c: char) -> bool {
-    ('a'..='z').contains(&c) || ('A'..='Z').contains(&c) || c == '_'
+    c.is_ascii_lowercase() || c.is_ascii_uppercase() || c == '_'
 }
 
 fn is_alphanumeric(c: char) -> bool {

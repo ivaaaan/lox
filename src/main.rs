@@ -1,8 +1,12 @@
 use std::{env, error::Error};
 
-use crate::scanner::Scanner;
+use crate::{
+    scanner::{Scanner, Token, TokenType},
+    syntax_tree::Expr,
+};
 
 mod scanner;
+mod syntax_tree;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let args: Vec<String> = env::args().collect();
@@ -10,9 +14,18 @@ fn main() -> Result<(), Box<dyn Error>> {
         panic!("empty args");
     }
 
-    let filename = &args[0];
+    // let filename = &args[0];
+    //
+    // let _file = std::fs::read(filename)?;
+    //
+    //
+    let expr = Expr::Binary {
+        left: Box::new(Expr::Literal(scanner::Object::String("hello".to_string()))),
+        operator: Token::new(TokenType::Plus, "+".to_string(), 1, None),
+        right: Box::new(Expr::Literal(scanner::Object::String("world".to_string()))),
+    };
 
-    let _file = std::fs::read(filename)?;
+    println!("{}", expr);
 
     Ok(())
 }
