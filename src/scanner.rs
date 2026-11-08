@@ -56,6 +56,8 @@ pub enum TokenType {
 pub enum Object {
     String(String),
     Number(f64),
+    Boolean(bool),
+    Nil,
 }
 
 impl fmt::Display for Object {
@@ -63,6 +65,8 @@ impl fmt::Display for Object {
         match self {
             Object::String(s) => write!(f, "{s:?}"),
             Object::Number(n) => write!(f, "{n}"),
+            Object::Boolean(v) => write!(f, "{v}"),
+            Object::Nil => write!(f, "nil"),
         }
     }
 }
@@ -74,10 +78,10 @@ impl fmt::Display for TokenType {
 
 #[derive(Debug, Clone)]
 pub struct Token {
-    typ: TokenType,
+    pub typ: TokenType,
     pub lexeme: String,
     line: usize,
-    object: Option<Object>,
+    pub object: Option<Object>,
 }
 
 impl Token {
